@@ -396,7 +396,7 @@ can be overridden with command line flags.</p>
 <p>makes Flow treat <code>require(&#39;image!foo.jpg&#39;)</code> as if it were <code>require(&#39;ImageStub&#39;)</code>.</p>
 
 <p>(<strong>note:</strong> you can specify <code>module.name_mapper</code> multiple times)</p></li>
-<li><p><code>module.name_mapper.extension</code> (string -&gt; string): specify a file extension to match, and a replacement module name, separated by a <code>-&gt;</code>. </p>
+<li><p><code>module.name_mapper.extension</code> (string -&gt; string): specify a file extension to match, and a replacement module name, separated by a <code>-&gt;</code>.</p>
 
 <p><em>(Note that this is just shorthand for <code>module.name_mapper=&#39;^\(.\*\)\.EXTENSION$&#39; -&gt; &#39;TEMPLATE&#39;</code>)</em></p>
 
@@ -429,6 +429,8 @@ module.file_ext=.foo
 module.file_ext=.bar
 </code></pre></div>
 <p>then Flow will instead look for the file extensions <code>.foo</code> and <code>.bar</code>.</p></li>
+<li><p><code>module.use_strict</code> (boolean): set this to <code>true</code> if you use a transpiler that
+adds <code>&quot;use strict&quot;;</code> to the top of every module. The default value is <code>false</code>.</p></li>
 <li><p><code>munge_underscores</code> (boolean): Set this to <code>true</code> to have Flow treat
 underscore-prefixed class properties and methods as private. This should be
 used in conjunction with <a href="https://github.com/facebook/jstransform/blob/master/visitors/es6-class-visitors.js"><code>jstransform</code>&#39;s ES6 class
