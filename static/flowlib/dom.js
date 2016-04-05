@@ -53,6 +53,40 @@ declare class FileList {
     [index: number]: File;
 }
 
+/* DataTransfer */
+
+declare class DataTransfer {
+  dropEffect: string;
+  effectAllowed: string;
+
+  items: DataTransferItemList; // readonly
+
+  setDragImage(image: Element, x: number, y: number): void;
+
+  /* old interface */
+  types: Array<string>; // readonly
+  getData(format: string): string;
+  setData(format: string, data: string): void;
+  clearData(format?: string): void;
+  files: FileList; // readonly
+}
+
+declare class DataTransferItemList {
+  length: number; // readonly
+  [index: number]: DataTransferItem;
+  add(data: string, type: string): ?DataTransferItem;
+  add(data: File): ?DataTransferItem;
+  remove(index: number): void;
+  clear(): void;
+};
+
+declare class DataTransferItem {
+  kind: string; // readonly
+  type: string; // readonly
+  getAsString(_callback: ?(data: string) => mixed): void;
+  getAsFile(): ?File;
+};
+
 /* DOM */
 
 declare class DOMError {
@@ -129,6 +163,10 @@ declare class WheelEvent extends MouseEvent {
     deltaY: number; // readonly
     deltaZ: number; // readonly
     deltaMode: number; // readonly
+}
+
+declare class DragEvent extends MouseEvent {
+    dataTransfer: ?DataTransfer; // readonly
 }
 
 declare class ProgressEvent extends Event {
@@ -263,9 +301,36 @@ declare class HTMLCollection {
     [index: number]: HTMLElement;
 }
 
-// from http://w3c.github.io/webcomponents/spec/custom/#extensions-to-document-interface-to-register
+// from https://www.w3.org/TR/custom-elements/#extensions-to-document-interface-to-register
 type ElementRegistrationOptions = {
-    prototype?: any;
+    prototype?: {
+      // from https://www.w3.org/TR/custom-elements/#types-of-callbacks
+      createdCallback?: () => mixed;
+      attachedCallback?: () => mixed;
+      detachedCallback?: () => mixed;
+      attributeChangedCallback?:
+      // attribute is set
+      ((
+        attributeLocalName: string,
+        oldAttributeValue: null,
+        newAttributeValue: string,
+        attributeNamespace: string
+      ) => mixed) &
+      // attribute is changed
+      ((
+        attributeLocalName: string,
+        oldAttributeValue: string,
+        newAttributeValue: string,
+        attributeNamespace: string
+      ) => mixed) &
+      // attribute is removed
+      ((
+        attributeLocalName: string,
+        oldAttributeValue: string,
+        newAttributeValue: null,
+        attributeNamespace: string
+      ) => mixed);
+    };
     extends?: string;
 }
 
