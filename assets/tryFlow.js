@@ -8890,7 +8890,7 @@ define("codemirror/lib/codemirror", ["require", "exports", "module"], function(r
 
   // THE END
 
-  CodeMirror.version = "5.13.2";
+  CodeMirror.version = "5.13.4";
 
   return CodeMirror;
 });
