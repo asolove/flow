@@ -10472,9 +10472,28 @@ define("tryFlow", ["exports", "codemirror/lib/codemirror", "flow"], function (ex
     _flow2["default"].setLibs(libs);
   });
 
-  function validator(text, callback, options) {
+  function printErrors(errors) {
+    if (errors.length == 0) {
+      return document.createTextNode('No errors!');
+    }
+    return errors.reduce(function (list, err) {
+      var li = document.createElement('li');
+      li.innerHTML = JSON.stringify(err, null, 2);
+      list.appendChild(li);
+      return list;
+    }, document.createElement('ul'));
+  }
+
+  function getAnnotations(text, callback, options) {
+    var errorsNode = options.errorsNode;
     flowReady.then(function () {
       var errors = _flow2["default"].checkContent('-', text);
+
+      if (errorsNode) {
+        while (errorsNode.lastChild) errorsNode.removeChild(errorsNode.lastChild);
+        errorsNode.appendChild(printErrors(errors));
+      }
+
       var lint = errors.map(function (err) {
         var messages = err.message;
         var firstLoc = messages[0].loc;
@@ -10491,16 +10510,14 @@ define("tryFlow", ["exports", "codemirror/lib/codemirror", "flow"], function (ex
       callback(lint);
     });
   }
-  validator.async = true;
+  getAnnotations.async = true;
 
-  _CodeMirror["default"].registerHelper("lint", "javascript", validator);
-
-  exports.createEditor = function createEditor(domNode) {
+  exports.createEditor = function createEditor(domNode, errorsNode) {
     require(['codemirror/addon/lint/lint', 'codemirror/mode/javascript/javascript', 'codemirror/mode/xml/xml', 'codemirror/mode/jsx/jsx'], function () {
       _CodeMirror["default"].fromTextArea(domNode, {
         lineNumbers: true,
         mode: "jsx",
-        lint: true
+        lint: { getAnnotations: getAnnotations, errorsNode: errorsNode }
       });
     });
   };

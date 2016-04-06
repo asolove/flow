@@ -53,16 +53,13 @@
 </nav></header>
 
 
+<section id="try" class="content">
 
+<link type="text/css" rel="stylesheet" href="/assets/tryFlow.css">
 
-<section class='content'><div class='width'>
-
-<article>
-
-<h1>Try Flow</h1>
-
-<textarea id="code">
-/* @flow */
+<div class="editor">
+  <div class="code">
+    <textarea id="code">/* @flow */
 
 function foo(x: ?number): string {
   if (x) {
@@ -71,29 +68,28 @@ function foo(x: ?number): string {
   return "default string";
 }
 </textarea>
-
-<link type="text/css" rel="stylesheet" href="/assets/tryFlow.css">
+  </div>
+  <pre class="errors" id="errors"></pre>
+</div>
 
 <script>
   require(
     ['tryFlow', 'flow'],
     function(tryFlow) {
-      tryFlow.createEditor(document.getElementById("code"));
+      tryFlow.createEditor(
+        document.getElementById("code"),
+        document.getElementById("errors")
+      );
     }
   );
 </script>
 
 
-</article>
+<footer>
+  &copy; Copyright 2014 - 2016, Facebook Inc.
+</footer>
 
-</div></section>
+</section>
 
-
-
-<footer><div class='width'>
-    &copy; Copyright 2014 - 2016, Facebook Inc.
-</div></footer>
-<script>require(['default']);</script>
 </body>
 </html>
-
