@@ -2611,10 +2611,12 @@ and expression_ ~is_cond cx loc e = Ast.Expression.(match e with
       arguments
     } -> (
       let argts = List.map (expression_or_spread cx) arguments in
-      List.iter (function Arg t | SpreadArg t ->
-        Flow.flow_t cx (t, StrT.at loc)
+      let reason = mk_reason (RCustom "!!!!!\n\nnew Function(..)") loc in
+      List.iter (function Arg t -> Flow.flow_t cx (t, StrT.at loc)
+        | SpreadArg t -> Flow.flow_t cx (t, DefT (reason, ArrT (ArrayAT (StrT.at loc,  None))))
       ) argts;
-      let reason = mk_reason (RCustom "new Function(..)") loc in
+      Hh_logger.info "In new Function(..) | SpreadArg t!";
+      let reason = mk_reason (RCustom "!!!!!\n\nnew Function(..)") loc in
       let proto = ObjProtoT reason in
       DefT (reason, FunT (
         Flow.dummy_static reason,
